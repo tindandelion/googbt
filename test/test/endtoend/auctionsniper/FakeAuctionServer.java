@@ -10,4 +10,20 @@ public class FakeAuctionServer {
     public void startSellingItem() {
         throw new NotImplementedException();
     }
+
+    public String getItemId() {
+        throw new NotImplementedException();
+    }
+
+    public void hasReceivedJoinRequestFromSniper() {
+        throw new NotImplementedException();
+    }
+
+    public void announceClosed() {
+        throw new NotImplementedException();
+    }
+
+    public void stop() {
+        throw new NotImplementedException();
+    }
 }

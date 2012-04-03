@@ -6,8 +6,11 @@ public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
+    private static final String XMPP_HOSTNAME = "localhost";
+    private static final String STATUS_JOINING = "";
+    private static final String STATUS_LOST = "";
 
-    public void startBiddingIn(FakeAuctionServer auction) {
+    public void startBiddingIn(final FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
