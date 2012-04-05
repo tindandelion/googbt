@@ -7,6 +7,7 @@ import static test.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
+    public static final String SNIPER_XMPP_ID = SNIPER_ID + "@localhost/Smack";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
 
@@ -35,5 +36,9 @@ public class ApplicationRunner {
         if (driver != null) {
             driver.dispose();
         }
+    }
+
+    public void hasShownSniperIsBidding() {
+        driver.showsSniperStatus(MainWindow.STATUS_BIDDING);
     }
 }

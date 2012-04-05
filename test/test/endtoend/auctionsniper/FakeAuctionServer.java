@@ -1,6 +1,7 @@
 package test.endtoend.auctionsniper;
 
 import auctionsniper.Main;
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
@@ -9,8 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class FakeAuctionServer {
     public static final String XMPP_HOSTNAME = "localhost";
@@ -46,8 +46,17 @@ public class FakeAuctionServer {
         return itemId;
     }
 
-    public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage();
+    public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT));
+    }
+
+    public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(String.format("SOLVersion: 1.1; Command: BID; Price: %d", bid)));
+    }
+
+    private void receivesAMessageMatching(String sniperId, Matcher<? super String> matcher) throws InterruptedException {
+        messageListener.receivesAMessage(matcher);
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
     }
 
     public void announceClosed() throws XMPPException {
@@ -58,15 +67,26 @@ public class FakeAuctionServer {
         connection.disconnect();
     }
 
+    public void reportPrice(int price, int increment, String bidder) throws XMPPException {
+        currentChat.sendMessage(
+                String.format("SOLVersion: 1.1; Event: PRICE; CurrentPrice: %d; " +
+                        "Increment: %d; Bidder: %s;", price, increment, bidder)
+        );
+    }
+
+
     private class SingleMessageListener implements MessageListener {
         private final ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
+
         @Override
         public void processMessage(Chat chat, Message message) {
             messages.add(message);
         }
 
-        public void receivesAMessage() throws InterruptedException {
-            assertThat("Message", messages.poll(5, SECONDS), is(notNullValue()));
+        public void receivesAMessage(Matcher<? super String> matcher) throws InterruptedException {
+            final Message message = messages.poll(5, SECONDS);
+            assertThat("Message", message, is(notNullValue()));
+            assertThat("Message", message.getBody(), matcher);
         }
     }
 }
