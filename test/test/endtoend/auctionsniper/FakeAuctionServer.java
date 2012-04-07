@@ -51,7 +51,7 @@ public class FakeAuctionServer {
     }
 
     public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
-        receivesAMessageMatching(sniperId, equalTo(String.format("SOLVersion: 1.1; Command: BID; Price: %d", bid)));
+        receivesAMessageMatching(sniperId, equalTo(String.format(Main.BID_COMMAND_FORMAT, bid)));
     }
 
     private void receivesAMessageMatching(String sniperId, Matcher<? super String> matcher) throws InterruptedException {
