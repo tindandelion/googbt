@@ -11,14 +11,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Main {
-    public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
-    public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
-
     private MainWindow ui;
     private static int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
     private static final int ARG_ITEM_ID = 3;
+
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_RESOURCE = "Auction";
     private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
@@ -55,7 +53,7 @@ public class Main {
         this.notToBeGCd = chat;
 
         chat.addMessageListener(
-                new AuctionMessageTranslator(
+                new AuctionMessageTranslator(connection.getUser(),
                         new AuctionSniper(auction, new SniperStateDisplayer())));
         auction.join();
     }
@@ -90,6 +88,11 @@ public class Main {
         @Override
         public void sniperBidding() {
             showStatus(MainWindow.STATUS_BIDDING);
+        }
+
+        @Override
+        public void sniperWinning() {
+            showStatus(MainWindow.STATUS_WINNING);
         }
 
         private void showStatus(final String status) {
