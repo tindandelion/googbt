@@ -86,6 +86,11 @@ public class Main {
         }
 
         @Override
+        public void sniperWon() {
+            showStatus(MainWindow.STATUS_WON);
+        }
+
+        @Override
         public void sniperBidding() {
             showStatus(MainWindow.STATUS_BIDDING);
         }
