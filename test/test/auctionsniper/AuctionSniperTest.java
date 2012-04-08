@@ -34,6 +34,7 @@ public class AuctionSniperTest {
         context.checking(new Expectations() {{
             ignoring(auction);
             allowing(sniperListener).sniperBidding(); then(sniperState.is("bidding"));
+
             atLeast(1).of(sniperListener).sniperLost(); when(sniperState.is("bidding"));
         }});
 
@@ -46,6 +47,7 @@ public class AuctionSniperTest {
         context.checking(new Expectations() {{
             ignoring(auction);
             allowing(sniperListener).sniperWinning(); then(sniperState.is("winning"));
+
             atLeast(1).of(sniperListener).sniperWon(); when(sniperState.is("winning"));
         }});
 
@@ -59,6 +61,18 @@ public class AuctionSniperTest {
             atLeast(1).of(sniperListener).sniperWinning();
         }});
         sniper.currentPrice(100, 45, PriceSource.FromSniper);
+    }
+
+    @Test
+    public void switchesFromWinningToBiddingState() throws Exception {
+        context.checking(new Expectations() {{
+            ignoring(auction);
+            allowing(sniperListener).sniperWinning(); then(sniperState.is("winning"));
+
+            atLeast(1).of(sniperListener).sniperBidding(); when(sniperState.is("winning"));
+        }});
+        sniper.currentPrice(100, 45, PriceSource.FromSniper);
+        sniper.currentPrice(146, 34, PriceSource.FromOtherBidder);
     }
 
     @Test
