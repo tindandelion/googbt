@@ -9,7 +9,7 @@ import com.objogate.wl.swing.gesture.GesturePerformer;
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("unchecked")
 public class AuctionSniperDriver extends JFrameDriver {
     public AuctionSniperDriver(int timeoutMillis) {
         super(new GesturePerformer(),
@@ -17,10 +17,6 @@ public class AuctionSniperDriver extends JFrameDriver {
                         named(MainWindow.MAIN_WINDOW_NAME),
                         showingOnScreen()),
                 new AWTEventQueueProber(timeoutMillis, 100));
-    }
-
-    public void showsSniperStatus(String statusText) {
-        new JTableDriver(this).hasCell(withLabelText(statusText));
     }
 
     public void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {

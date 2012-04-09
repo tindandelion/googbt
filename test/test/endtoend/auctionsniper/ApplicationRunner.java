@@ -28,7 +28,7 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(SnipersTableModel.textFor(SniperState.JOINING));
+        driver.showsSniperStatus("", 0, 0, SnipersTableModel.textFor(SniperState.JOINING));
     }
 
     public void stop() {
@@ -37,8 +37,8 @@ public class ApplicationRunner {
         }
     }
 
-    public void showsSniperHasLostAuction() {
-        driver.showsSniperStatus(SnipersTableModel.textFor(SniperState.LOST));
+    public void showsSniperHasLostAuction(int lastPrice, int lastBid) {
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, SnipersTableModel.textFor(SniperState.LOST));
     }
 
     public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
