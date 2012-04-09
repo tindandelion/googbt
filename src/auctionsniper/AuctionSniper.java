@@ -3,7 +3,6 @@ package auctionsniper;
 public class AuctionSniper implements AuctionEventListener {
     private SniperListener listener;
     private Auction auction;
-    private boolean isWinning = false;
     private SniperSnapshot snapshot;
 
     public AuctionSniper(String itemId, Auction auction, SniperListener listener) {
@@ -14,23 +13,26 @@ public class AuctionSniper implements AuctionEventListener {
 
     @Override
     public void auctionClosed() {
-        if (isWinning) {
-            listener.sniperWon();
-        } else {
-            listener.sniperLost();
-        }
+        snapshot = snapshot.closed();
+        notifyChange();
     }
 
     @Override
     public void currentPrice(int price, int increment, PriceSource source) {
-        isWinning = (source == PriceSource.FromSniper);
-        if (isWinning) {
-            snapshot = snapshot.winning(price);
-        } else {
-            final int bid = price + increment;
-            auction.bid(bid);
-            snapshot = snapshot.bidding(price, bid);
+        switch (source) {
+            case FromSniper:
+                snapshot = snapshot.winning(price);
+                break;
+            case FromOtherBidder:
+                final int bid = price + increment;
+                auction.bid(bid);
+                snapshot = snapshot.bidding(price, bid);
+                break;
         }
+        notifyChange();
+    }
+
+    private void notifyChange() {
         listener.sniperStateChanged(snapshot);
     }
 }
