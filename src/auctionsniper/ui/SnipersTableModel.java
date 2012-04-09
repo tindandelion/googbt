@@ -7,13 +7,13 @@ import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel {
     private static String[] STATUS_TEXT = {
-            MainWindow.STATUS_JOINING,
-            MainWindow.STATUS_BIDDING,
-            MainWindow.STATUS_WINNING,
-            MainWindow.STATUS_LOST,
-            MainWindow.STATUS_WON
+            "Joining",
+            "Bidding",
+            "Winning",
+            "Lost",
+            "Won"
     };
-    private SniperSnapshot snapshot = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+    private SniperSnapshot snapshot = SniperSnapshot.joining("");
 
     public enum Column {
         ITEM_IDENTIFIER,
@@ -25,8 +25,10 @@ public class SnipersTableModel extends AbstractTableModel {
             return values()[offset];
         }
     }
-    private String statusText = MainWindow.STATUS_JOINING;
 
+    public static String textFor(SniperState state) {
+        return STATUS_TEXT[state.ordinal()];
+    }
 
     @Override
     public int getRowCount() {
@@ -44,19 +46,14 @@ public class SnipersTableModel extends AbstractTableModel {
             case ITEM_IDENTIFIER: return snapshot.itemId;
             case LAST_PRICE: return snapshot.lastPrice;
             case LAST_BID: return snapshot.lastBid;
-            case SNIPER_STATE: return statusText;
+            case SNIPER_STATE: return textFor(snapshot.state);
         }
         throw new IllegalArgumentException("No column at: " + columnIndex);
     }
 
-    public void setStatusText(String value) {
-        statusText = value;
-        fireTableRowsUpdated(0, 0);
-    }
 
     public void sniperStatusChanged(SniperSnapshot snapshot) {
         this.snapshot = snapshot;
-        this.statusText = STATUS_TEXT[snapshot.state.ordinal()];
         fireTableRowsUpdated(0, 0);
     }
 }
