@@ -1,6 +1,8 @@
 package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
+import auctionsniper.ui.SwingThreadSniperListener;
 import auctionsniper.xmpp.XMPPAuction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
@@ -12,6 +14,7 @@ import java.awt.event.WindowEvent;
 
 public class Main {
     private MainWindow ui;
+    private final SnipersTableModel snipers = new SnipersTableModel();
     private static int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
@@ -31,7 +34,7 @@ public class Main {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ui = new MainWindow();
+                ui = new MainWindow(snipers);
             }
         });
     }
@@ -54,7 +57,8 @@ public class Main {
 
         chat.addMessageListener(
                 new AuctionMessageTranslator(connection.getUser(),
-                        new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
+                        new AuctionSniper(itemId, auction,
+                                new SwingThreadSniperListener(snipers))));
         auction.join();
     }
 
@@ -76,18 +80,5 @@ public class Main {
         connection.connect();
         connection.login(username, password);
         return connection;
-    }
-
-
-    private class SniperStateDisplayer implements SniperListener {
-        @Override
-        public void sniperStateChanged(final SniperSnapshot snapshot) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    ui.sniperStatusChanged(snapshot);
-                }
-            });
-        }
     }
 }

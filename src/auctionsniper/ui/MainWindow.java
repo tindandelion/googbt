@@ -1,19 +1,20 @@
 package auctionsniper.ui;
 
-import auctionsniper.SniperSnapshot;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
+    public static final String APPLICATION_TITLE = "Auction Sniper Main";
     private static final String SNIPERS_TABLE_NAME = "snipers table";
 
-    private final SnipersTableModel snipers = new SnipersTableModel();
+    private final SnipersTableModel snipers;
 
-    public MainWindow() throws HeadlessException {
+    public MainWindow(SnipersTableModel snipers) throws HeadlessException {
         super("Auction Sniper");
-        setName(MAIN_WINDOW_NAME);
+        this.snipers = snipers;
+
+        setName(APPLICATION_TITLE);
+        setTitle(APPLICATION_TITLE);
         fillContentsPane(makeSnipersTable());
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -30,9 +31,5 @@ public class MainWindow extends JFrame {
         JTable table = new JTable(snipers);
         table.setName(SNIPERS_TABLE_NAME);
         return table;
-    }
-
-    public void sniperStatusChanged(SniperSnapshot snapshot) {
-        snipers.sniperStatusChanged(snapshot);
     }
 }
