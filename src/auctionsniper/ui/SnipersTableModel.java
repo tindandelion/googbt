@@ -14,7 +14,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
             "Lost",
             "Won"
     };
-    private SniperSnapshot snapshot = SniperSnapshot.joining("");
+    private SniperSnapshot snapshot = SniperSnapshot.joining("item-54321");
 
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
