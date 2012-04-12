@@ -86,8 +86,7 @@ public class FakeAuctionServer {
 
         public void receivesAMessage(Matcher<? super String> matcher) throws InterruptedException {
             final Message message = messages.poll(5, SECONDS);
-            assertThat("Message", message, is(notNullValue()));
-            assertThat("Message", message.getBody(), matcher);
+            assertThat("Message received from auction", message, hasProperty("body", matcher));
         }
     }
 }
