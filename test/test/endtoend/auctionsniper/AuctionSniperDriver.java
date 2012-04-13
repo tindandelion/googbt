@@ -1,11 +1,11 @@
 package test.endtoend.auctionsniper;
 
+import auctionsniper.ui.MainWindow;
 import com.objogate.wl.swing.AWTEventQueueProber;
-import com.objogate.wl.swing.driver.JFrameDriver;
-import com.objogate.wl.swing.driver.JTableDriver;
-import com.objogate.wl.swing.driver.JTableHeaderDriver;
+import com.objogate.wl.swing.driver.*;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
+import javax.swing.*;
 import javax.swing.table.JTableHeader;
 
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
@@ -32,5 +32,21 @@ public class AuctionSniperDriver extends JFrameDriver {
         JTableHeaderDriver headers = new JTableHeaderDriver(this, JTableHeader.class);
         headers.hasHeaders(matching(withLabelText("Item"), withLabelText("Last Price"),
                 withLabelText("Last Bid"), withLabelText("State")));
+    }
+
+    public void startBiddingFor(String itemId) {
+        itemIdField().replaceAllText(itemId);
+        bidButton().click();
+    }
+
+    private AbstractButtonDriver bidButton() {
+        return new JButtonDriver(this, JButton.class, named(MainWindow.JOIN_BUTTON_NAME));
+    }
+
+    private JTextFieldDriver itemIdField() {
+        JTextFieldDriver newItemId = new JTextFieldDriver(
+                this, JTextField.class, named(MainWindow.NEW_ITEM_ID_NAME));
+        newItemId.focusWithMouse();
+        return newItemId;
     }
 }
