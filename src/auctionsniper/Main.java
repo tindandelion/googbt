@@ -5,7 +5,6 @@ import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.ui.SwingThreadSniperListener;
 import auctionsniper.ui.UserRequestListener;
 import auctionsniper.xmpp.XMPPAuction;
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -24,9 +23,8 @@ public class Main {
 
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_RESOURCE = "Auction";
-    private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
     @SuppressWarnings("unused")
-    private List<Chat> notToBeGCd = new ArrayList<Chat>();
+    private List<Auction> notToBeGCd = new ArrayList<Auction>();
 
     public Main() throws Exception {
         startUserInterface();
@@ -52,17 +50,13 @@ public class Main {
         ui.addUserRequestListener(new UserRequestListener() {
             @Override
             public void joinAuction(String itemId) {
+                Auction auction = new XMPPAuction(connection, itemId);
+                notToBeGCd.add(auction);
                 snipers.addSniper(SniperSnapshot.joining(itemId));
-                final Chat chat = connection.getChatManager().createChat(
-                        auctionId(itemId, connection), null);
 
-                Auction auction = new XMPPAuction(chat);
-                notToBeGCd.add(chat);
-
-                chat.addMessageListener(
-                        new AuctionMessageTranslator(connection.getUser(),
-                                new AuctionSniper(itemId, auction,
-                                        new SwingThreadSniperListener(snipers))));
+                auction.addAuctionEventListener(
+                        new AuctionSniper(itemId, auction,
+                                new SwingThreadSniperListener(snipers)));
                 auction.join();
             }
         });
@@ -75,10 +69,6 @@ public class Main {
                 connection.disconnect();
             }
         });
-    }
-
-    private static String auctionId(String itemId, XMPPConnection connection) {
-        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {

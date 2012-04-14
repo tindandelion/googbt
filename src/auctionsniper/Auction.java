@@ -1,6 +1,7 @@
 package auctionsniper;
 
 public interface Auction {
-    void bid(int newPrice);
+    void addAuctionEventListener(AuctionEventListener listener);
     void join();
+    void bid(int newPrice);
 }
