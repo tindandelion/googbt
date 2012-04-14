@@ -1,5 +1,7 @@
 package auctionsniper.ui;
 
-public interface UserRequestListener {
+import java.util.EventListener;
+
+public interface UserRequestListener extends EventListener {
     public void joinAuction(String itemId);
 }

@@ -1,11 +1,11 @@
 package auctionsniper.ui;
 
+import auctionsniper.util.Announcer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.List;
 
 public class MainWindow extends JFrame {
     public static final String APPLICATION_TITLE = "Auction Sniper Main";
@@ -15,7 +15,7 @@ public class MainWindow extends JFrame {
     private static final String SNIPERS_TABLE_NAME = "snipers table";
 
     private final SnipersTableModel snipers;
-    private List<UserRequestListener> listeners = new ArrayList<UserRequestListener>();
+    private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
     public MainWindow(SnipersTableModel snipers) throws HeadlessException {
         super("Auction Sniper");
@@ -42,9 +42,7 @@ public class MainWindow extends JFrame {
         joinAuctionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (UserRequestListener l : listeners) {
-                    l.joinAuction(itemIdField.getText());
-                }
+                userRequests.announce().joinAuction(itemIdField.getText());
             }
         });
 
@@ -65,6 +63,6 @@ public class MainWindow extends JFrame {
     }
 
     public void addUserRequestListener(UserRequestListener listener) {
-        listeners.add(listener);
+        userRequests.addListener(listener);
     }
 }
