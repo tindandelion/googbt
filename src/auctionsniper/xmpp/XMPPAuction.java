@@ -2,32 +2,21 @@ package auctionsniper.xmpp;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
-import auctionsniper.AuctionMessageTranslator;
-import auctionsniper.Main;
 import auctionsniper.util.Announcer;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 public class XMPPAuction implements Auction {
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
-    private static final String AUCTION_ID_FORMAT = Main.ITEM_ID_AS_LOGIN + "@%s/" + Main.AUCTION_RESOURCE;
 
     private final Announcer<AuctionEventListener> listeners = Announcer.to(AuctionEventListener.class);
     private final Chat chat;
 
-    public static String auctionId(String itemId, XMPPConnection connection) {
-        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
-    }
-
-    public XMPPAuction(XMPPConnection connection, String itemId) {
-        chat = connection.getChatManager().createChat(
-                XMPPAuction.auctionId(itemId, connection), null);
+    public XMPPAuction(Chat chat, String sniperId) {
+        this.chat = chat;
         chat.addMessageListener(
-                new AuctionMessageTranslator(
-                        connection.getUser(),
-                        listeners.announce()));
+                new AuctionMessageTranslator(sniperId, listeners.announce()));
     }
 
     @Override

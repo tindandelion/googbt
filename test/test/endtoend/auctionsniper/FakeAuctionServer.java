@@ -1,7 +1,7 @@
 package test.endtoend.auctionsniper;
 
-import auctionsniper.Main;
 import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
@@ -30,8 +30,8 @@ public class FakeAuctionServer {
 
     public void startSellingItem() throws XMPPException {
         connection.connect();
-        connection.login(format(Main.ITEM_ID_AS_LOGIN, itemId),
-                AUCTION_PASSWORD, Main.AUCTION_RESOURCE);
+        connection.login(format(XMPPAuctionHouse.ITEM_ID_AS_LOGIN, itemId),
+                AUCTION_PASSWORD, XMPPAuctionHouse.AUCTION_RESOURCE);
         connection.getChatManager().addChatListener(
                 new ChatManagerListener() {
                     @Override
