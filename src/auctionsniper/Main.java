@@ -1,16 +1,13 @@
 package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SniperLauncher;
 import auctionsniper.ui.SnipersTableModel;
-import auctionsniper.ui.SwingThreadSniperListener;
-import auctionsniper.ui.UserRequestListener;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     private MainWindow ui;
@@ -20,7 +17,6 @@ public class Main {
     private static final int ARG_PASSWORD = 2;
 
     @SuppressWarnings("unused")
-    private List<Auction> notToBeGCd = new ArrayList<Auction>();
 
     public Main() throws Exception {
         startUserInterface();
@@ -40,23 +36,11 @@ public class Main {
         XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(
                 args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
         main.disconnectWhenUICloses(auctionHouse);
-        main.addUserRequestListenerFor(auctionHouse);
+        main.addSniperLauncherFor(auctionHouse);
     }
 
-    private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
-        ui.addUserRequestListener(new UserRequestListener() {
-            @Override
-            public void joinAuction(String itemId) {
-                Auction auction = auctionHouse.auctionFor(itemId);
-                notToBeGCd.add(auction);
-                snipers.addSniper(SniperSnapshot.joining(itemId));
-
-                auction.addAuctionEventListener(
-                        new AuctionSniper(itemId, auction,
-                                new SwingThreadSniperListener(snipers)));
-                auction.join();
-            }
-        });
+    private void addSniperLauncherFor(final AuctionHouse auctionHouse) {
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
     }
 
     private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
