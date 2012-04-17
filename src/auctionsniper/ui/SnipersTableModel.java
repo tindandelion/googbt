@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener, SniperCollector {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
     private static String[] STATUS_TEXT = {
             "Joining",
             "Bidding",
@@ -16,7 +16,6 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     };
 
     private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
-    private List<AuctionSniper> notToBeGCd = new ArrayList<AuctionSniper>();
 
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
@@ -61,8 +60,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     }
 
     @Override
-    public void addSniper(AuctionSniper sniper) {
-        notToBeGCd.add(sniper);
+    public void sniperAdded(AuctionSniper sniper) {
         addSniperSnapshot(sniper.getSnapshot());
         sniper.addListener(new SwingThreadSniperListener(this));
     }

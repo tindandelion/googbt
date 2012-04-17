@@ -1,5 +1,6 @@
 package auctionsniper.ui;
 
+import auctionsniper.SniperPortfolio;
 import auctionsniper.util.Announcer;
 
 import javax.swing.*;
@@ -14,12 +15,12 @@ public class MainWindow extends JFrame {
 
     private static final String SNIPERS_TABLE_NAME = "snipers table";
 
-    private final SnipersTableModel snipers;
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
+    private SniperPortfolio portfolio;
 
-    public MainWindow(SnipersTableModel snipers) throws HeadlessException {
+    public MainWindow(SniperPortfolio portfolio) {
         super("Auction Sniper");
-        this.snipers = snipers;
+        this.portfolio = portfolio;
 
         setName(APPLICATION_TITLE);
         setTitle(APPLICATION_TITLE);
@@ -57,6 +58,8 @@ public class MainWindow extends JFrame {
     }
 
     private JTable makeSnipersTable() {
+        SnipersTableModel snipers = new SnipersTableModel();
+        portfolio.addPortfolioListener(snipers);
         JTable table = new JTable(snipers);
         table.setName(SNIPERS_TABLE_NAME);
         return table;
