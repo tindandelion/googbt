@@ -7,6 +7,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,7 +23,12 @@ public class AuctionSniperTest {
     private final SniperListener sniperListener = context.mock(SniperListener.class);
     private static final String ITEM_ID = "item-123";
 
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
+
+    @Before
+    public void setUp() throws Exception {
+        sniper.addListener(sniperListener);
+    }
 
     @Test
     public void reportLostWhenAuctionClosesImmediately() throws Exception {
