@@ -1,11 +1,13 @@
 package test.endtoend.auctionsniper;
 
+import auctionsniper.Item;
 import org.junit.After;
 import org.junit.Test;
 
 public class AuctionSniperEndToEndTest {
-    private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
-    private final FakeAuctionServer auction2 = new FakeAuctionServer("item-65432");
+    private int STOP_PRICE = 5000;
+    private final FakeAuctionServer auction = new FakeAuctionServer(new Item("item-54321", STOP_PRICE));
+    private final FakeAuctionServer auction2 = new FakeAuctionServer(new Item("item-65432", STOP_PRICE));
     private final ApplicationRunner application = new ApplicationRunner();
 
     @Test

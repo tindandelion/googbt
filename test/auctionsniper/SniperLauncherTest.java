@@ -23,8 +23,11 @@ public class SniperLauncherTest {
     @Test
     public void initial() throws Exception {
         final String itemId = "item 123";
+        final int stopPrice = 1000;
+        final Item item = new Item(itemId, stopPrice);
+
         context.checking(new Expectations() {{
-            allowing(auctionHouse).auctionFor(itemId);
+            allowing(auctionHouse).auctionFor(item);
                 will(returnValue(auction));
             oneOf(auction).addAuctionEventListener(with(sniperForItem(itemId)));
                 when(auctionState.is("not joined"));
@@ -34,7 +37,7 @@ public class SniperLauncherTest {
                 then(auctionState.is("joined"));
         }});
 
-        launcher.joinAuction(itemId);
+        launcher.joinAuction(item);
     }
 
     private Matcher<AuctionSniper> sniperForItem(String itemId) {

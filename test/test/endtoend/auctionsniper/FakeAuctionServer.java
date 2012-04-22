@@ -1,5 +1,6 @@
 package test.endtoend.auctionsniper;
 
+import auctionsniper.Item;
 import auctionsniper.xmpp.XMPPAuction;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 import org.hamcrest.Matcher;
@@ -19,18 +20,18 @@ public class FakeAuctionServer {
 
     private final SingleMessageListener messageListener = new SingleMessageListener();
 
-    private String itemId;
     private XMPPConnection connection;
     private Chat currentChat;
+    private Item item;
 
-    public FakeAuctionServer(String itemId) {
-        this.itemId = itemId;
+    public FakeAuctionServer(Item item) {
+        this.item = item;
         this.connection = new XMPPConnection(XMPP_HOSTNAME);
     }
 
     public void startSellingItem() throws XMPPException {
         connection.connect();
-        connection.login(format(XMPPAuctionHouse.ITEM_ID_AS_LOGIN, itemId),
+        connection.login(format(XMPPAuctionHouse.ITEM_ID_AS_LOGIN, item.identifier),
                 AUCTION_PASSWORD, XMPPAuctionHouse.AUCTION_RESOURCE);
         connection.getChatManager().addChatListener(
                 new ChatManagerListener() {
@@ -44,7 +45,11 @@ public class FakeAuctionServer {
     }
 
     public String getItemId() {
-        return itemId;
+        return item.identifier;
+    }
+
+    public Item getItem() {
+        return item;
     }
 
     public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {

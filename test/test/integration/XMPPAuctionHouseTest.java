@@ -2,6 +2,7 @@ package test.integration;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
+import auctionsniper.Item;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 
 public class XMPPAuctionHouseTest {
-    private final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
+    private final FakeAuctionServer auctionServer = new FakeAuctionServer(new Item("item-54321", 1000));
     private XMPPAuctionHouse auctionHouse;
 
     @Before
@@ -36,7 +37,7 @@ public class XMPPAuctionHouseTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+        Auction auction = auctionHouse.auctionFor(auctionServer.getItem());
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 
         auction.join();

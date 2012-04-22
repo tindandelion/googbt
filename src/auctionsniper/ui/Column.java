@@ -3,7 +3,7 @@ package auctionsniper.ui;
 import auctionsniper.SniperSnapshot;
 
 public enum Column {
-    ITEM_IDENTIFIER("Item") {
+    ITEM_IDENTIFIER("auctionsniper.Item") {
         @Override
         public Object valueIn(SniperSnapshot snapshot) {
             return snapshot.itemId;
