@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class MainWindow extends JFrame {
     public static final String APPLICATION_TITLE = "Auction Sniper Main";
     public static final String NEW_ITEM_ID_NAME = "new item id";
+    public static final String STOP_PRICE_NAME = "stop price";
     public static final String JOIN_BUTTON_NAME = "join";
 
     private static final String SNIPERS_TABLE_NAME = "snipers table";
@@ -36,6 +37,11 @@ public class MainWindow extends JFrame {
         itemIdField.setColumns(25);
         itemIdField.setName(NEW_ITEM_ID_NAME);
         controls.add(itemIdField);
+
+        final JTextField stopPriceField = new JTextField();
+        stopPriceField.setName(STOP_PRICE_NAME);
+        stopPriceField.setColumns(10);
+        controls.add(stopPriceField);
 
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
