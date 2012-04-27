@@ -4,6 +4,7 @@ import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.util.Announcer;
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 
 public class XMPPAuction implements Auction {
@@ -15,8 +16,26 @@ public class XMPPAuction implements Auction {
 
     public XMPPAuction(Chat chat, String sniperId) {
         this.chat = chat;
-        chat.addMessageListener(
-                new AuctionMessageTranslator(sniperId, listeners.announce()));
+        AuctionMessageTranslator translator = new AuctionMessageTranslator(sniperId, listeners.announce());
+        chat.addMessageListener(translator);
+        addAuctionEventListener(chatDisconnectorFor(translator));
+    }
+
+    private AuctionEventListener chatDisconnectorFor(final MessageListener listener) {
+        return new AuctionEventListener() {
+            @Override
+            public void auctionFailed() {
+                chat.removeMessageListener(listener);
+            }
+
+            @Override
+            public void auctionClosed() {
+            }
+
+            @Override
+            public void currentPrice(int price, int increment, PriceSource source) {
+            }
+        };
     }
 
     @Override

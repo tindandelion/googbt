@@ -84,6 +84,5 @@ public class ApplicationRunner {
     }
 
     public void reportInvalidMessage(FakeAuctionServer auction, String message) {
-        throw new RuntimeException("Not implemented");
     }
 }
