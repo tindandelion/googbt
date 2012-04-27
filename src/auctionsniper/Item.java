@@ -28,4 +28,8 @@ public class Item {
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
+
+    public boolean allowsBid(int bid) {
+        return bid <= stopPrice;
+    }
 }

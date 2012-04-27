@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class MainWindowTest {
     public static final String ITEM_ID = "an item-id";
-    public static final int STOP_PRICE = 1000;
+    public static final int STOP_PRICE = 987;
     private final SniperPortfolio portfolio = new SniperPortfolio();
     private final MainWindow mainWindow = new MainWindow(portfolio);
     private final AuctionSniperDriver driver = new AuctionSniperDriver(100);

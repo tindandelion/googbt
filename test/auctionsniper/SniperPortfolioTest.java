@@ -14,7 +14,7 @@ public class SniperPortfolioTest {
 
     @Test
     public void notifiesListenersOfNewSnipers() throws Exception {
-        final AuctionSniper sniper = new AuctionSniper("item-123", null);
+        final AuctionSniper sniper = new AuctionSniper(new Item("item-123", 0), null);
         context.checking(new Expectations() {{
             oneOf(listener).sniperAdded(sniper);
         }});
