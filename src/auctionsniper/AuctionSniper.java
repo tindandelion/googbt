@@ -25,6 +25,11 @@ public class AuctionSniper implements AuctionEventListener {
     }
 
     @Override
+    public void auctionFailed() {
+
+    }
+
+    @Override
     public void currentPrice(int price, int increment, PriceSource source) {
         switch (source) {
             case FromSniper:

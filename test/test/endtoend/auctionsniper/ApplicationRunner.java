@@ -78,4 +78,12 @@ public class ApplicationRunner {
     public void hasShownSniperIsLosing(FakeAuctionServer auction, int currentPrice, int bid) {
         driver.showsSniperStatus(auction.getItemId(), currentPrice, bid, SnipersTableModel.textFor(SniperState.LOSING));
     }
+
+    public void showsSniperHasFailed(FakeAuctionServer auction) {
+        driver.showsSniperStatus(auction.getItemId(), 0, 0, SnipersTableModel.textFor(SniperState.FAILED));
+    }
+
+    public void reportInvalidMessage(FakeAuctionServer auction, String message) {
+        throw new RuntimeException("Not implemented");
+    }
 }

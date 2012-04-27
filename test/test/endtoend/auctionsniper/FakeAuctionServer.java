@@ -80,6 +80,10 @@ public class FakeAuctionServer {
         );
     }
 
+    public void sendInvalidMessageContaining(String message) throws XMPPException {
+        currentChat.sendMessage(message);
+    }
+
 
     private class SingleMessageListener implements MessageListener {
         private final ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
