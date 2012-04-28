@@ -16,9 +16,14 @@ public class XMPPAuction implements Auction {
 
     public XMPPAuction(Chat chat, String sniperId) {
         this.chat = chat;
-        AuctionMessageTranslator translator = new AuctionMessageTranslator(sniperId, listeners.announce());
+        AuctionMessageTranslator translator = new AuctionMessageTranslator(
+                sniperId, listeners.announce(), failureReporter());
         chat.addMessageListener(translator);
         addAuctionEventListener(chatDisconnectorFor(translator));
+    }
+
+    private XMPPFailureReporter failureReporter() {
+        return new LoggingXMPPFailureReporter();
     }
 
     private AuctionEventListener chatDisconnectorFor(final MessageListener listener) {
